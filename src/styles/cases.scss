@@ -38,6 +38,7 @@
 		.row {
 			display: flex;
 			height: 100%;
+
 			@media (max-width: $tablet) {
 				flex-direction: column;
 			}
