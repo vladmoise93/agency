@@ -1,17 +1,11 @@
-import React, { useEffect } from 'react';
-import Header from './components/header';
+import React, { useEffect, useState } from 'react';
 import './styles/App.scss';
-import Banner from './components/banner';
-import Cases from './components/cases';
-import IntroOverlay from './components/introOverlay';
+import Home from './components/home';
 import gsap from 'gsap';
-import { HashRouter as Router } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 
 function App() {
 	useEffect(() => {
-		let vh = window.innerHeight * 0.01;
-		document.documentElement.style.setProperty('--vh', `${vh}px`);
-
 		//timeline
 		const tl = gsap.timeline();
 
@@ -51,13 +45,40 @@ function App() {
 			});
 	}, []);
 
+	const [ x, setX ] = useState(0);
+	const [ width, setWidth ] = useState();
+	const tl = gsap.timeline({ defaults: { duration: 1, ease: 'elastic.out(1, 1)' } });
+
+	useEffect(() => {
+		if (window.innerWidth <= 2560) setWidth(-4270);
+		if (window.innerWidth <= 1920) setWidth(-3200);
+		if (window.innerWidth <= 1440) setWidth(-2400);
+		if (window.innerWidth <= 1024) setWidth(-1705);
+	}, []);
+
+	const scrolling = (e) => {
+		if (window.innerWidth < 1024) return;
+		else {
+			let delta = e.deltaY;
+			if (delta > 0) {
+				if (x > width && !tl.isActive()) {
+					gsap.to('.cases .row', { x: x - 340 < width ? width : x - 340, ease: 'ease.in' });
+					setX(x - 340 < width ? width : x - 340);
+				}
+			}
+			if (delta < 0) {
+				if (x < 0 && !tl.isActive()) {
+					gsap.to('.cases .row', { x: x + 340 > 0 ? 0 : x + 340, ease: 'ease.in' });
+					setX(x + 340 > 0 ? 0 : x + 340);
+				}
+			}
+		}
+	};
+
 	return (
-		<div className="App">
+		<div className="App" onWheel={(e) => scrolling(e)}>
 			<Router>
-				<IntroOverlay />
-				<Header />
-				<Banner />
-				<Cases />
+				<Route exact path="/" component={Home} />
 			</Router>
 		</div>
 	);

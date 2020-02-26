@@ -8,34 +8,12 @@ export default function Cases() {
 	const tl = gsap.timeline({ defaults: { duration: 1, ease: 'elastic.out(1, 1)' } });
 	const [ width, setWidth ] = useState();
 
-	useEffect(
-		() => {
-			if (window.innerWidth <= 2560) setWidth(-4270);
-			if (window.innerWidth <= 1920) setWidth(-3200);
-			if (window.innerWidth <= 1440) setWidth(-2400);
-			if (window.innerWidth <= 1024) setWidth(-1705);
-		},
-		[ window.innerWidth ]
-	);
-
-	const scrolling = (e) => {
-		if (window.innerWidth < 1024) return;
-		else {
-			let delta = e.deltaY;
-			if (delta > 0) {
-				if (x > width && !tl.isActive()) {
-					gsap.to('.cases .row', { x: x - 340 < width ? width : x - 340, ease: 'ease.in' });
-					setX(x - 340 < width ? width : x - 340);
-				}
-			}
-			if (delta < 0) {
-				if (x < 0 && !tl.isActive()) {
-					gsap.to('.cases .row', { x: x + 340 > 0 ? 0 : x + 340, ease: 'ease.in' });
-					setX(x + 340 > 0 ? 0 : x + 340);
-				}
-			}
-		}
-	};
+	useEffect(() => {
+		if (window.innerWidth <= 2560) setWidth(-4270);
+		if (window.innerWidth <= 1920) setWidth(-3200);
+		if (window.innerWidth <= 1440) setWidth(-2400);
+		if (window.innerWidth <= 1024) setWidth(-1705);
+	}, []);
 
 	const handleClickL = () => {
 		if (window.innerWidth < 1024) return;
@@ -64,9 +42,9 @@ export default function Cases() {
 						<CasesNext />
 					</div>
 				</div>
-				<div className="row" onWheel={(e) => scrolling(e)}>
+				<div className="row">
 					{caseStudies.map((caseItem) => (
-						<div className="case" key={caseItem.id}>
+						<div id="case" className="case" key={caseItem.id}>
 							<div className="case-details">
 								<span>{caseItem.subtitle}</span>
 								<h2>{caseItem.title}</h2>
